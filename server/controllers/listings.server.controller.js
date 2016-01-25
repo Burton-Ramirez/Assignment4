@@ -48,20 +48,13 @@ exports.update = function(req, res) {
   var listing = req.listing;
 
   /* Replace the article's properties with the new properties found in req.body */
-  Listing.find({code: req.body.code},function(err, listing) {
-  if (err) throw err;
-
-  listing.code = req.body.code;
   listing.name = req.body.name;
+  listing.code = req.body.code;
+  listing.address = req.body.address;
+
 
   /* save the coordinates (located in req.results if there is an address property) */
-  if(req.results) {
-    listing.coordinates = {
-      latitude: req.results.lat,
-      longitude: req.results.lng
-    };
-  }
-  });
+
   /* Save the article */
   listing.save(function(err) {
     if(err) {
