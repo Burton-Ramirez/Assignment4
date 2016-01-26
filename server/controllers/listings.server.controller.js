@@ -40,11 +40,15 @@ exports.create = function(req, res) {
 /* Show the current listing */
 exports.read = function(req, res) {
   /* send back the listing as json from the request */
-  res.send(req.listing);
+  console.log('listings.read');
+    console.log(req.params);
+    res.send(req.listing);
 };
 
 /* Update a listing */
 exports.update = function(req, res) {
+  console.log('request.update');
+    console.log(req.body);
   var listing = req.listing;
 
   /* Replace the article's properties with the new properties found in req.body */
@@ -66,7 +70,7 @@ exports.update = function(req, res) {
   listing.save(function(err) {
     if(err) {
       console.log(err);
-      res.status(404).send(err);
+      res.status(400).send(err);
     } else {
       res.json(listing);
     }
@@ -75,13 +79,14 @@ exports.update = function(req, res) {
 
 /* Delete a listing */ //DONE
 exports.delete = function(req, res) {
+  console.log('listing.delete');
   var listing = req.listing;
 
   /* Remove the article */
   listing.remove(function(err){
     if (err) throw err;
 
-    console.log('Listing was removed.');
+  
     res.json(listing);
   });
 };
