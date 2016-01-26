@@ -54,6 +54,12 @@ exports.update = function(req, res) {
 
 
   /* save the coordinates (located in req.results if there is an address property) */
+  if(req.results) {
+    listing.coordinates = {
+      latitude: req.results.lat,
+      longitude: req.results.lng
+    };
+  }
 
   /* Save the article */
   listing.save(function(err) {
@@ -72,7 +78,7 @@ exports.delete = function(req, res) {
 
   /* Remove the article */
   listing.remove(function(err){
-    if (err) throw err;
+    if (err) res.status(400).send(err);
 
     console.log('Listing was removed.');
     res.json(listing);
@@ -84,8 +90,7 @@ exports.list = function(req, res) {
   /* Your code here */
   Listing.find({}, null, {sort: {code:1}}, function(err, listings) {
         if (err) res.status(400).send(err);
-        //res.body = listings;
-        //res.send(listings);
+
         res.json(listings);
     });
 };
