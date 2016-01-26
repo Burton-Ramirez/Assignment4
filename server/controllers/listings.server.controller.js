@@ -49,7 +49,7 @@ exports.update = function(req, res) {
   var listing = req.listing;
 
   /* Replace the article's properties with the new properties found in req.body */
-  Listing.find({code: req.body.code},function(err, listing) {
+  Listing.find({code: req.body.code}, function(err, listing) {
   if (err) throw err;
 
   listing.code = req.body.code;
@@ -62,16 +62,21 @@ exports.update = function(req, res) {
       longitude: req.results.lng
     };
   }
-  });
+
   /* Save the article */
   listing.save(function(err) {
-    if(err) {
-      console.log(err);
-      res.status(400).send(err);
-    } else {
-      res.json(listing);
-    }
-  });
+            if(err) {
+                console.log(err);
+                res.status(400).send(err);
+            } else {
+                res.json(listing);
+            }
+        });
+    });
+
+    /* Replace the article's properties with the new properties found in req.body */
+    /* save the coordinates (located in req.results if there is an address property) */
+    /* Save the article */
 };
 
 /* Delete a listing */
