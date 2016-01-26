@@ -1,4 +1,3 @@
-
 /* Dependencies */
 var mongoose = require('mongoose'),
     Listing = require('../models/listings.server.model.js');
@@ -30,7 +29,7 @@ exports.create = function(req, res) {
   listing.save(function(err) {
     if(err) {
       console.log(err);
-      res.status(400).send(err);
+      res.status(404).send(err);
     } else {
       res.json(listing);
     }
@@ -45,46 +44,37 @@ exports.read = function(req, res) {
 
 /* Update a listing */
 exports.update = function(req, res) {
-
   var listing = req.listing;
 
-  /* Replace the article's properties with the new properties found in req.body */
-  Listing.find({code: req.body.code}, function(err, listing) {
-  if (err) throw err;
+  Listing.findOne({name: listing.name}, function(err, listed) {
+    if (err) throw err;
 
-  listing.code = req.body.code;
-  listing.name = req.body.name;
+    listed.code = req.body.code;
+    listed.name = req.body.name;
+    listed.address = req.body.address;
 
-  /* save the coordinates (located in req.results if there is an address property) */
-  if(req.results) {
-    listing.coordinates = {
-      latitude: req.results.lat,
-      longitude: req.results.lng
-    };
-  }
+    if(req.results) {
+      listing.coordinates = {
+        latitude: req.results.lat,
+        longitude: req.results.lng
+      };
+    }
 
-  /* Save the article */
-  listing.save(function(err) {
-            if(err) {
-                console.log(err);
-                res.status(400).send(err);
-            } else {
-                res.json(listing);
-            }
-        });
+  listed.save(function(err) {
+    if(err) {
+      console.log(err);
+      res.status(404).send(err);
+    } else {
+      res.json(listed);
+      }
     });
-
-    /* Replace the article's properties with the new properties found in req.body */
-    /* save the coordinates (located in req.results if there is an address property) */
-    /* Save the article */
+  });
 };
 
 /* Delete a listing */
 exports.delete = function(req, res) {
-
   var listing = req.listing;
 
-  /* Remove the article */
   listing.remove(function(err){
     if (err) throw err;
 
@@ -96,7 +86,7 @@ exports.delete = function(req, res) {
 exports.list = function(req, res) {
 
   Listing.find({}, null, {sort: {code:1}}, function(err, listings) {
-        if (err) res.status(400).send(err);
+        if (err) res.status(404).send(err);
 
         res.json(listings);
     });
@@ -112,7 +102,7 @@ exports.list = function(req, res) {
 exports.listingByID = function(req, res, next, id) {
   Listing.findById(id).exec(function(err, listing) {
     if(err) {
-      res.status(400).send(err);
+      res.status(404).send(err);
     } else {
       req.listing = listing;
       next();

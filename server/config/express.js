@@ -53,10 +53,10 @@ app.post('/api/listings', function(req, res) {
 
 
   /* go to homepage for all routes not specified */
-  /*app.all('/*', function (req, res, next) {
+  app.all('/*', function (req, res, next) {
     res.redirect('/index.html');
     next(); // pass control to the next handler
-  });*/
+  });
 
 
   return app;
