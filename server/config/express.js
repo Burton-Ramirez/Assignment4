@@ -19,7 +19,6 @@ module.exports.init = function() {
 
   //body parsing middleware
   app.use(bodyParser.json());
-  app.use(listingsRouter);
 
   /* server wrapper around Google Maps API to get latitude + longitude coordinates from address */
   app.post('/api/coordinates', getCoordinates, function(req, res) {
@@ -28,14 +27,13 @@ module.exports.init = function() {
 
   /* serve static files */
   app.use(express.static('client'));
-    app.use('views', express.static('./client/views'));
-
+  
   /* use the listings router for requests to the api */
+  app.use(listingsRouter);
   app.get('/api/listings', function(req, res, next) {
           res.send(req.results);
       });
 
-//new code
 app.post('/api/listings', function(req, res) {
         res.send(req.results);
     });
@@ -45,7 +43,6 @@ app.post('/api/listings', function(req, res) {
     });
 
     app.get('/', function (req, res, next) {
-        console.log('the response will be sent by the next function ...');
         next();
     }, function (req, res) {
         res.sendFile(path.join(__dirname, '../../client/views', 'index.html'));
